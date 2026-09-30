@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaué Coffee Company</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- SDK Oficial de Supabase JS Client v2 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Librería para generar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <!-- Barra de Navegación -->
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="#" onclick="mostrarSeccion('inicio')" class="logo-link">
+                <img src="Logocafe.jpg" alt="Logo Cafetería" class="brand-logo">
+            </a>
+            <nav class="nav-links">
+                <a href="#" onclick="mostrarSeccion('inicio')" class="nav-item">INICIO</a>
+                <a href="#" onclick="mostrarSeccion('menu')" class="nav-item">MENÚ</a>
+                <!-- Visible solo para empleados -->
+                <a href="#" id="link-reporte-ventas" onclick="mostrarSeccion('ventas')" class="nav-item nav-empleado" style="display: none;">REPORTE VENTAS 🔒</a>
+            </nav>
+        </div>
+
+        <div class="nav-right">
+            <a href="#" onclick="mostrarSeccion('tiendas')" class="store-locator">
+                <span class="pin-icon">📍</span> Localizar Tienda
+            </a>
+            <div id="contenedor-botones-auth">
+                <button onclick="mostrarSeccion('login')" class="btn btn-login">Ingresar</button>
+                <button onclick="mostrarSeccion('registro')" class="btn btn-register">Únete</button>
+            </div>
+            <div id="contenedor-usuario-logueado" style="display: none; align-items: center; gap: 10px;">
+                <span id="texto-usuario-saludo" style="font-size: 13px; font-weight: bold;"></span>
+                <button onclick="cerrarSesion()" class="btn btn-login">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN 1: INICIO (HERO) -->
+    <section id="seccion-inicio" class="seccion-app active">
+        <div class="hero-section">
+            <div class="hero-image-container">
+                <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1000&auto=format&fit=crop" alt="Ambiente de Cafetería" class="hero-img">
+            </div>
+            <div class="hero-content">
+                <h2>JUNTÉMONOS MÁS</h2>
+                <p>Hay conexiones que no necesitan Wi-Fi</p>
+                <button onclick="mostrarSeccion('menu')" class="hero-btn">Ven a nuestra cafetería</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: CATÁLOGO DE MENÚ -->
+    <section id="seccion-menu" class="seccion-app">
+        <div class="container-pagina">
+            <h2>NUESTRO MENÚ</h2>
+            <div class="grid-menu">
+                <div class="card-menu">
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400" alt="Café">
+                    <h3>Café Americano</h3>
+                    <p>Espresso diluido en agua caliente.</p>
+                    <span class="precio">$35.00 MXN</span>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Café Americano', 35)">Agregar al Pedido</button>
+                </div>
+                <div class="card-menu">
+                    <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400" alt="Cappuccino">
+                    <h3>Cappuccino</h3>
+                    <p>Espresso con leche vaporizada y abundante espuma.</p>
+                    <span class="precio">$45.00 MXN</span>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Cappuccino', 45)">Agregar al Pedido</button>
+                </div>
+                <div class="card-menu">
+                    <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400" alt="Croissant">
+                    <h3>Croissant</h3>
+                    <p>Hojaldre recién horneado de mantequilla.</p>
+                    <span class="precio">$40.00 MXN</span>
+                    <button class="btn-agregar" onclick="agregarAlCarrito('Croissant', 40)">Agregar al Pedido</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3: LOCALIZAR TIENDA -->
+    <section id="seccion-tiendas" class="seccion-app">
+        <div class="container-pagina">
+            <h2>NUESTRAS SUCURSALES</h2>
+            <p>Encuentra tu cafetería más cercana.</p>
+            <div class="card-tienda" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                <h3>☕ Sucursal Central</h3>
+                <p>Av. Principal #123, Centro</p>
+                <p><strong>Horario:</strong> 7:00 AM - 10:00 PM</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4: REPORTE DE VENTAS (USO EMPLEADOS) -->
+    <section id="seccion-ventas" class="seccion-app">
+        <div class="container-pagina">
+            <div class="header-ventas">
+                <h2>Panel de Ventas (Supabase DB)</h2>
+                <button onclick="generarPDFVentas()" class="btn-descargar-pdf">📄 Descargar Reporte PDF</button>
+            </div>
+
+            <div id="documento-pdf" class="pdf-container">
+                <div class="pdf-header">
+                    <h2>Reporte de Ventas - Kaué Coffee Company</h2>
+                    <p id="pdf-fecha"></p>
+                </div>
+
+                <table class="tabla-ventas">
+                    <thead>
+                        <tr>
+                            <th># Orden</th>
+                            <th>Fecha/Hora</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-ventas-body">
+                        <tr>
+                            <td colspan="4" class="vacio">No hay ventas registradas.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pdf-footer-monto">
+                    <strong>Venta Total Acumulada: </strong>
+                    <span id="total-ventas-acumulado">$0.00 MXN</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 5: LOGIN -->
+    <section id="seccion-login" class="seccion-app">
+        <div class="container-auth">
+            <h2>Iniciar Sesión</h2>
+            <form onsubmit="procesarLogin(event)">
+                <label>Correo Electrónico</label>
+                <input type="email" id="login-email" placeholder="usuario@correo.com" required>
+                <label>Contraseña</label>
+                <input type="password" id="login-password" placeholder="••••••••" required>
+                <button type="submit" class="btn btn-register btn-block">Ingresar</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 6: REGISTRO DE CUENTA -->
+    <section id="seccion-registro" class="seccion-app">
+        <div class="container-auth">
+            <h2>Crear una Cuenta</h2>
+            <form onsubmit="procesarRegistro(event)">
+                <label>Nombre Completo</label>
+                <input type="text" id="reg-nombre" placeholder="Tu nombre" required>
+                <label>Correo Electrónico</label>
+                <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
+                <label>Contraseña</label>
+                <input type="password" id="reg-password" placeholder="••••••••" required>
+                <label>Tipo de Cuenta</label>
+                <select id="reg-rol" required>
+                    <option value="cliente">Cliente</option>
+                    <option value="empleado">Empleado</option>
+                </select>
+                <button type="submit" class="btn btn-register btn-block">Registrarse en Supabase</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- WIDGET FLOTANTE: PEDIDO / CARRITO -->
+    <aside id="widget-pedido" class="widget-pedido">
+        <div class="widget-header">
+            <h3>🛒 Tu Pedido</h3>
+        </div>
+        <ul id="lista-pedido" class="lista-pedido">
+            <li class="vacio">No has seleccionado productos.</li>
+        </ul>
+        <div class="widget-footer">
+            <div class="total-box">
+                <span>Total:</span>
+                <strong id="total-monto">$0.00 MXN</strong>
+            </div>
+            <button class="btn-comprar" onclick="realizarCompra()">Comprar</button>
+        </div>
+    </aside>
+
+    <script src="app.js"></script>
+</body>
+</html>
