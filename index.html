@@ -55,32 +55,12 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2: CATÁLOGO DE MENÚ -->
+    <!-- SECCIÓN 2: CATÁLOGO DE MENÚ (20 PRODUCTOS) -->
     <section id="seccion-menu" class="seccion-app">
         <div class="container-pagina">
             <h2>NUESTRO MENÚ</h2>
-            <div class="grid-menu">
-                <div class="card-menu">
-                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400" alt="Café">
-                    <h3>Café Americano</h3>
-                    <p>Espresso diluido en agua caliente.</p>
-                    <span class="precio">$35.00 MXN</span>
-                    <button class="btn-agregar" onclick="agregarAlCarrito('Café Americano', 35)">Agregar al Pedido</button>
-                </div>
-                <div class="card-menu">
-                    <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400" alt="Cappuccino">
-                    <h3>Cappuccino</h3>
-                    <p>Espresso con leche vaporizada y abundante espuma.</p>
-                    <span class="precio">$45.00 MXN</span>
-                    <button class="btn-agregar" onclick="agregarAlCarrito('Cappuccino', 45)">Agregar al Pedido</button>
-                </div>
-                <div class="card-menu">
-                    <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400" alt="Croissant">
-                    <h3>Croissant</h3>
-                    <p>Hojaldre recién horneado de mantequilla.</p>
-                    <span class="precio">$40.00 MXN</span>
-                    <button class="btn-agregar" onclick="agregarAlCarrito('Croissant', 40)">Agregar al Pedido</button>
-                </div>
+            <div class="grid-menu" id="grid-menu-productos">
+                <!-- Se puebla dinámicamente desde app.js con 20 productos -->
             </div>
         </div>
     </section>
@@ -187,6 +167,48 @@
             <button class="btn-comprar" onclick="realizarCompra()">Comprar</button>
         </div>
     </aside>
+
+    <!-- BOTÓN CIRCULAR Y CHATBOT FLOTANTE -->
+    <button id="chatbot-toggle-btn" class="chatbot-toggle-btn" onclick="toggleChatbot()" title="Asistente Kaué">
+        💬
+    </button>
+
+    <div id="chatbot-window" class="chatbot-window">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <span class="chatbot-icon">☕</span>
+                <div>
+                    <strong>Kaué Bot</strong>
+                    <span class="chatbot-status">En línea</span>
+                </div>
+            </div>
+            <button class="chatbot-close-btn" onclick="toggleChatbot()">✕</button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+            <div class="chat-message bot">
+                ¡Hola! 👋 Bienvenido a Kaué Coffee Company. ¿Qué deseas ordenar hoy? Puedes pedirme el menú escribiendo "ver menú" o pedir directamente tus productos escribiendo por ejemplo: "quiero 2 americano y 1 croissant".
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje o pedido aquí..." onkeypress="handleChatKeyPress(event)">
+            <button onclick="enviarMensajeChat()" class="chatbot-send-btn">Enviar</button>
+        </div>
+    </div>
+
+    <!-- MODAL PERSONALIZADO DE NOTIFICACIÓN -->
+    <div id="modal-notificacion" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="modal-domain">kaue-coffe.vercel.app</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-mensaje-texto"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn-aceptar" onclick="cerrarModalNotificacion()">Aceptar</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
