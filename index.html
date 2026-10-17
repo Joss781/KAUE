@@ -1,215 +1,173 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaué Coffee Company</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- SDK Oficial de Supabase JS Client v2 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Librería para generar PDFs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaué Coffee - Menú & Servicios</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Barra de Navegación -->
-    <header class="navbar">
-        <div class="nav-left">
-            <a href="#" onclick="mostrarSeccion('inicio')" class="logo-link">
-                <img src="Logocafe.jpg" alt="Logo Cafetería" class="brand-logo">
-            </a>
-            <nav class="nav-links">
-                <a href="#" onclick="mostrarSeccion('inicio')" class="nav-item">INICIO</a>
-                <a href="#" onclick="mostrarSeccion('menu')" class="nav-item">MENÚ</a>
-                <!-- Visible solo para empleados -->
-                <a href="#" id="link-reporte-ventas" onclick="mostrarSeccion('ventas')" class="nav-item nav-empleado" style="display: none;">REPORTE VENTAS 🔒</a>
-            </nav>
-        </div>
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-mug-hot"></i>
+      <span>Kaué Coffee</span>
+    </div>
+    <nav>
+      <a href="#inicio">Inicio</a>
+      <a href="#menu">Menú</a>
+      <a href="#nosotros">Nosotros</a>
+    </nav>
+    <div class="user-actions">
+      <span id="userGreeting" class="user-greeting hidden"></span>
+      <button id="loginBtn" class="btn-secondary"><i class="fa-solid fa-user"></i> Iniciar Sesión</button>
+      <button id="cartBtn" class="btn-primary">
+        <i class="fa-solid fa-cart-shopping"></i> <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
 
-        <div class="nav-right">
-            <a href="#" onclick="mostrarSeccion('tiendas')" class="store-locator">
-                <span class="pin-icon">📍</span> Localizar Tienda
-            </a>
-            <div id="contenedor-botones-auth">
-                <button onclick="mostrarSeccion('login')" class="btn btn-login">Ingresar</button>
-                <button onclick="mostrarSeccion('registro')" class="btn btn-register">Únete</button>
-            </div>
-            <div id="contenedor-usuario-logueado" style="display: none; align-items: center; gap: 10px;">
-                <span id="texto-usuario-saludo" style="font-size: 13px; font-weight: bold;"></span>
-                <button onclick="cerrarSesion()" class="btn btn-login">Cerrar Sesión</button>
-            </div>
-        </div>
-    </header>
+  <section id="inicio" class="hero">
+    <div class="hero-content">
+      <h1>Sabor Artesanal en Cada Gota</h1>
+      <p>Descubre nuestra selección de cafés de especialidad, postres frescos y bebidas artesanales.</p>
+      <a href="#menu" class="btn-cta">Explorar Menú</a>
+    </div>
+  </section>
 
-    <!-- SECCIÓN 1: INICIO (HERO) -->
-    <section id="seccion-inicio" class="seccion-app active">
-        <div class="hero-section">
-            <div class="hero-image-container">
-                <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1000&auto=format&fit=crop" alt="Ambiente de Cafetería" class="hero-img">
-            </div>
-            <div class="hero-content">
-                <h2>JUNTÉMONOS MÁS</h2>
-                <p>Hay conexiones que no necesitan Wi-Fi</p>
-                <button onclick="mostrarSeccion('menu')" class="hero-btn">Ven a nuestra cafetería</button>
-            </div>
-        </div>
-    </section>
+  <section id="menu" class="menu-section">
+    <h2>Nuestro Menú</h2>
+    <p class="section-subtitle">Selecciona tus productos favoritos y realiza tu pedido en línea.</p>
+    
+    <div class="category-filters">
+      <button class="filter-btn active" data-category="todos">Todos</button>
+      <button class="filter-btn" data-category="calientes">Cafés Calientes</button>
+      <button class="filter-btn" data-category="frias">Bebidas Frías</button>
+      <button class="filter-btn" data-category="reposteria">Repostería</button>
+      <button class="filter-btn" data-category="salados">Bocadillos Salados</button>
+    </div>
 
-    <!-- SECCIÓN 2: CATÁLOGO DE MENÚ (20 PRODUCTOS) -->
-    <section id="seccion-menu" class="seccion-app">
-        <div class="container-pagina">
-            <h2>NUESTRO MENÚ</h2>
-            <div class="grid-menu" id="grid-menu-productos">
-                <!-- Se puebla dinámicamente desde app.js con 20 productos -->
-            </div>
-        </div>
-    </section>
+    <div class="products-grid" id="productsGrid"></div>
+  </section>
 
-    <!-- SECCIÓN 3: LOCALIZAR TIENDA -->
-    <section id="seccion-tiendas" class="seccion-app">
-        <div class="container-pagina">
-            <h2>NUESTRAS SUCURSALES</h2>
-            <p>Encuentra tu cafetería más cercana.</p>
-            <div class="card-tienda" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
-                <h3>☕ Sucursal Central</h3>
-                <p>Av. Principal #123, Centro</p>
-                <p><strong>Horario:</strong> 7:00 AM - 10:00 PM</p>
-            </div>
-        </div>
-    </section>
+  <div id="productModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-modal" id="closeProductModal">&times;</span>
+      <div class="modal-body" id="productModalBody"></div>
+    </div>
+  </div>
 
-    <!-- SECCIÓN 4: REPORTE DE VENTAS (USO EMPLEADOS) -->
-    <section id="seccion-ventas" class="seccion-app">
-        <div class="container-pagina">
-            <div class="header-ventas">
-                <h2>Panel de Ventas (Supabase DB)</h2>
-                <button onclick="generarPDFVentas()" class="btn-descargar-pdf">📄 Descargar Reporte PDF</button>
-            </div>
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content auth-content">
+      <span class="close-modal" id="closeAuthModal">&times;</span>
+      <div class="auth-tabs">
+        <button id="tabLogin" class="tab-btn active">Iniciar Sesión</button>
+        <button id="tabRegister" class="tab-btn">Crear Cuenta</button>
+      </div>
 
-            <div id="documento-pdf" class="pdf-container">
-                <div class="pdf-header">
-                    <h2>Reporte de Ventas - Kaué Coffee Company</h2>
-                    <p id="pdf-fecha"></p>
-                </div>
+      <form id="loginForm" class="auth-form">
+        <h3>Bienvenido de Nuevo</h3>
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+        <input type="password" id="loginPassword" placeholder="Contraseña" required>
+        <button type="submit" class="btn-primary full-width">Ingresar</button>
+      </form>
 
-                <table class="tabla-ventas">
-                    <thead>
-                        <tr>
-                            <th># Orden</th>
-                            <th>Fecha/Hora</th>
-                            <th>Productos</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-ventas-body">
-                        <tr>
-                            <td colspan="4" class="vacio">No hay ventas registradas.</td>
-                        </tr>
-                    </tbody>
-                </table>
+      <form id="registerForm" class="auth-form hidden">
+        <h3>Crea tu Cuenta</h3>
+        <input type="text" id="regName" placeholder="Nombre completo" required>
+        <input type="email" id="regEmail" placeholder="Correo electrónico" required>
+        <input type="password" id="regPassword" placeholder="Contraseña" required>
+        <button type="submit" class="btn-primary full-width">Registrarse</button>
+      </form>
+    </div>
+  </div>
 
-                <div class="pdf-footer-monto">
-                    <strong>Venta Total Acumulada: </strong>
-                    <span id="total-ventas-acumulado">$0.00 MXN</span>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div id="cartModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-modal" id="closeCartModal">&times;</span>
+      <h3>Tu Pedido</h3>
+      <div id="cartItemsList" class="cart-items-list"></div>
+      <div class="cart-summary">
+        <p>Total: <strong id="cartTotal">$0.00 MXN</strong></p>
+        <button id="checkoutBtn" class="btn-primary full-width">Confirmar Pedido y Descargar Ticket (PDF)</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- SECCIÓN 5: LOGIN -->
-    <section id="seccion-login" class="seccion-app">
-        <div class="container-auth">
-            <h2>Iniciar Sesión</h2>
-            <form onsubmit="procesarLogin(event)">
-                <label>Correo Electrónico</label>
-                <input type="email" id="login-email" placeholder="usuario@correo.com" required>
-                <label>Contraseña</label>
-                <input type="password" id="login-password" placeholder="••••••••" required>
-                <button type="submit" class="btn btn-register btn-block">Ingresar</button>
-            </form>
-        </div>
-    </section>
+  <div class="notification-wrapper">
+    <div class="notification-panel hidden" id="notificationPanel">
+      <div class="notification-header">
+        <h4><i class="fa-solid fa-clock-rotate-left"></i> Estado de tu Pedido</h4>
+        <button id="closeNotificationBtn">&times;</button>
+      </div>
+      <div class="notification-body" id="notificationBody">
+        <p class="no-order">No tienes ningún pedido activo en este momento.</p>
+      </div>
+    </div>
 
-    <!-- SECCIÓN 6: REGISTRO DE CUENTA -->
-    <section id="seccion-registro" class="seccion-app">
-        <div class="container-auth">
-            <h2>Crear una Cuenta</h2>
-            <form onsubmit="procesarRegistro(event)">
-                <label>Nombre Completo</label>
-                <input type="text" id="reg-nombre" placeholder="Tu nombre" required>
-                <label>Correo Electrónico</label>
-                <input type="email" id="reg-email" placeholder="usuario@correo.com" required>
-                <label>Contraseña</label>
-                <input type="password" id="reg-password" placeholder="••••••••" required>
-                <label>Tipo de Cuenta</label>
-                <select id="reg-rol" required>
-                    <option value="cliente">Cliente</option>
-                    <option value="empleado">Empleado</option>
-                </select>
-                <button type="submit" class="btn btn-register btn-block">Registrarse en Supabase</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- WIDGET FLOTANTE: PEDIDO / CARRITO -->
-    <aside id="widget-pedido" class="widget-pedido">
-        <div class="widget-header">
-            <h3>🛒 Tu Pedido</h3>
-        </div>
-        <ul id="lista-pedido" class="lista-pedido">
-            <li class="vacio">No has seleccionado productos.</li>
-        </ul>
-        <div class="widget-footer">
-            <div class="total-box">
-                <span>Total:</span>
-                <strong id="total-monto">$0.00 MXN</strong>
-            </div>
-            <button class="btn-comprar" onclick="realizarCompra()">Comprar</button>
-        </div>
-    </aside>
-
-    <!-- BOTÓN CIRCULAR Y CHATBOT FLOTANTE -->
-    <button id="chatbot-toggle-btn" class="chatbot-toggle-btn" onclick="toggleChatbot()" title="Asistente Kaué">
-        💬
+    <button class="notification-btn" id="notificationBtn" aria-label="Notificaciones de pedido">
+      <i class="fa-solid fa-bell"></i>
+      <span class="notification-badge hidden" id="notificationBadge">1</span>
     </button>
+  </div>
 
-    <div id="chatbot-window" class="chatbot-window">
-        <div class="chatbot-header">
-            <div class="chatbot-title">
-                <span class="chatbot-icon">☕</span>
-                <div>
-                    <strong>Kaué Bot</strong>
-                    <span class="chatbot-status">En línea</span>
-                </div>
-            </div>
-            <button class="chatbot-close-btn" onclick="toggleChatbot()">✕</button>
+  <div class="chatbot-wrapper">
+    <div class="chatbot-window hidden" id="chatbotWindow">
+      <div class="chatbot-header">
+        <div class="bot-info">
+          <i class="fa-solid fa-robot"></i>
+          <span>Asistente Kaué</span>
         </div>
-        <div id="chatbot-messages" class="chatbot-messages">
-            <div class="chat-message bot">
-                ¡Hola! 👋 Bienvenido a Kaué Coffee Company. ¿Qué deseas ordenar hoy? Puedes pedirme el menú escribiendo "ver menú" o pedir directamente tus productos escribiendo por ejemplo: "quiero 2 americano y 1 croissant".
-            </div>
-        </div>
-        <div class="chatbot-input-container">
-            <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje o pedido aquí..." onkeypress="handleChatKeyPress(event)">
-            <button onclick="enviarMensajeChat()" class="chatbot-send-btn">Enviar</button>
-        </div>
+        <button id="closeChatbotBtn">&times;</button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages">
+        <div class="message bot-message">¡Hola! ☕ ¿En qué puedo ayudarte hoy? Pregúntame sobre nuestro menú, horarios o recomendaciones.</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbotInput" placeholder="Escribe tu duda aquí...">
+        <button id="sendChatbotBtn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
     </div>
 
-    <!-- MODAL PERSONALIZADO DE NOTIFICACIÓN -->
-    <div id="modal-notificacion" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header">
-                <span class="modal-domain">kaue-coffe.vercel.app</span>
-            </div>
-            <div class="modal-body">
-                <p id="modal-mensaje-texto"></p>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn-aceptar" onclick="cerrarModalNotificacion()">Aceptar</button>
-            </div>
-        </div>
-    </div>
+    <button class="chatbot-btn" id="chatbotBtn" aria-label="Abrir asistente virtual">
+      <i class="fa-solid fa-comments"></i>
+    </button>
+  </div>
 
-    <script src="app.js"></script>
+  <div id="pdfInvoiceTemplate" class="pdf-template hidden">
+    <div class="pdf-header">
+      <h2>Kaué Coffee</h2>
+      <p>Comprobante de Venta Digital</p>
+      <p id="pdfFolio"></p>
+      <p id="pdfDate"></p>
+    </div>
+    <hr>
+    <div class="pdf-client">
+      <p><strong>Cliente:</strong> <span id="pdfClientName"></span></p>
+      <p><strong>Correo:</strong> <span id="pdfClientEmail"></span></p>
+    </div>
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>P. Unitario</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="pdfTableBody"></tbody>
+    </table>
+    <div class="pdf-total">
+      <p><strong>Total Pagado:</strong> <span id="pdfTotalAmount"></span></p>
+    </div>
+    <div class="pdf-footer">
+      <p>¡Gracias por tu compra en Kaué Coffee!</p>
+      <p>Te notificaremos el estado de tu pedido en la burbuja de notificación.</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
