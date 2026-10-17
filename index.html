@@ -23,6 +23,7 @@
     <div class="user-actions">
       <span id="userGreeting" class="user-greeting hidden"></span>
       <button id="loginBtn" class="btn-secondary"><i class="fa-solid fa-user"></i> Iniciar Sesión</button>
+      <button id="logoutBtn" class="btn-secondary hidden"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
       <button id="cartBtn" class="btn-primary">
         <i class="fa-solid fa-cart-shopping"></i> <span id="cartCount">0</span>
       </button>
@@ -136,35 +137,48 @@
     </button>
   </div>
 
-  <div id="pdfInvoiceTemplate" class="pdf-template hidden">
-    <div class="pdf-header">
-      <h2>Kaué Coffee</h2>
-      <p>Comprobante de Venta Digital</p>
-      <p id="pdfFolio"></p>
-      <p id="pdfDate"></p>
-    </div>
-    <hr>
-    <div class="pdf-client">
-      <p><strong>Cliente:</strong> <span id="pdfClientName"></span></p>
-      <p><strong>Correo:</strong> <span id="pdfClientEmail"></span></p>
-    </div>
-    <table class="pdf-table">
-      <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Cant.</th>
-          <th>P. Unitario</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody id="pdfTableBody"></tbody>
-    </table>
-    <div class="pdf-total">
-      <p><strong>Total Pagado:</strong> <span id="pdfTotalAmount"></span></p>
-    </div>
-    <div class="pdf-footer">
-      <p>¡Gracias por tu compra en Kaué Coffee!</p>
-      <p>Te notificaremos el estado de tu pedido en la burbuja de notificación.</p>
+  <div id="pdfContainer" class="pdf-offscreen">
+    <div id="pdfInvoiceTemplate" class="pdf-invoice">
+      <div class="invoice-header">
+        <h2>☕ KAUÉ COFFEE</h2>
+        <p class="invoice-subtitle">Café de Especialidad & Repostería</p>
+        <p>Av. Principal #123, Centro Histórico</p>
+        <p>Tel: (222) 123-4567 | RFC: KAU120304-CF1</p>
+      </div>
+      
+      <div class="invoice-divider"></div>
+
+      <div class="invoice-details">
+        <p><strong>Folio:</strong> <span id="pdfFolio"></span></p>
+        <p><strong>Fecha:</strong> <span id="pdfDate"></span></p>
+        <p><strong>Cliente:</strong> <span id="pdfClientName"></span></p>
+        <p><strong>Correo:</strong> <span id="pdfClientEmail"></span></p>
+      </div>
+
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>Cant.</th>
+            <th>Descripción</th>
+            <th class="text-right">Precio</th>
+            <th class="text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="pdfTableBody"></tbody>
+      </table>
+
+      <div class="invoice-divider"></div>
+
+      <div class="invoice-summary">
+        <p><span>Subtotal:</span> <span id="pdfSubtotal">$0.00 MXN</span></p>
+        <p><span>IVA (16%):</span> <span id="pdfTax">$0.00 MXN</span></p>
+        <p class="invoice-total"><span>TOTAL:</span> <span id="pdfTotalAmount">$0.00 MXN</span></p>
+      </div>
+
+      <div class="invoice-footer">
+        <p>¡Muchas gracias por tu preferencia!</p>
+        <p>Conserva este ticket para cualquier aclaración o para recoger tu pedido en barra.</p>
+      </div>
     </div>
   </div>
 

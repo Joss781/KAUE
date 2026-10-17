@@ -1,4 +1,4 @@
-// BASE DE DATOS DE PRODUCTOS (20 ÍTEMS)
+// BASE DE DATOS DE PRODUCTOS (20 ÍTEMS CORREGIDOS EN IMÁGENES Y NOMBRES)
 const products = [
   { id: 1, name: "Café Americano", category: "calientes", price: 45, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400", desc: "Espresso diluido en agua caliente con un sabor balanceado." },
   { id: 2, name: "Cappuccino Tradicional", category: "calientes", price: 55, img: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400", desc: "Espresso, leche vaporizada y abundante espuma de leche." },
@@ -14,20 +14,20 @@ const products = [
   { id: 12, name: "Muffin de Arándanos", category: "reposteria", price: 42, img: "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400", desc: "Esponjoso panecillo horneado con arándanos frescos." },
   { id: 13, name: "Cheesecake de Frutilla", category: "reposteria", price: 58, img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400", desc: "Pastel de queso cremoso con mermelada artesanal." },
   { id: 14, name: "Brownie de Nuez", category: "reposteria", price: 45, img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400", desc: "Pastel denso de chocolate oscuro y trozos de nuez." },
-  { id: 15, name: "Donut Glaseada", category: "reposteria", price: 30, img: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400", desc: "Clásica rosquilla esponjosa con glaseado de vainilla." },
+  { id: 15, name: "Donut Glaseada", category: "reposteria", price: 30, img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400", desc: "Rosquilla horneada glaseada con una fina capa de azúcar." },
   { id: 16, name: "Panini Pavo y Queso", category: "salados", price: 85, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400", desc: "Pechuga de pavo, queso gouda y aderezo artesanal al grill." },
   { id: 17, name: "Bagel de Salmón", category: "salados", price: 95, img: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=400", desc: "Bagel tostado con queso crema, salmón ahumado y alcaparras." },
   { id: 18, name: "Ciabatta Caprese", category: "salados", price: 80, img: "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400", desc: "Queso mozzarella fresco, jitomate y pesto de albahaca." },
-  { id: 19, name: "Empanada de Jamón y Queso", category: "salados", price: 35, img: "https://images.unsplash.com/photo-1628102491629-778571d893a3?w=400", desc: "Masa dorada rellena de jamón horneado y queso fundido." },
-  { id: 20, name: "Quiche de Espinacas", category: "salados", price: 65, img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400", desc: "Tarta salada horneada con espinacas y queso ricotta." }
+  { id: 19, name: "Empanada de Jamón y Queso", category: "salados", price: 35, img: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400", desc: "Masa crujiente y horneada rellena de fino jamón y queso derretido." },
+  { id: 20, name: "Quiche de Espinacas", category: "salados", price: 65, img: "https://images.unsplash.com/photo-1621236378699-8597faf6a176?w=400", desc: "Tarta salada horneada con espinacas y queso ricotta." }
 ];
 
-// ESTADO GLOBAL DE LA APLICACIÓN
-let cart = [];
-let currentUser = null;
-let activeTimer = null;
+// ESTADO GLOBAL DE LA APLICACIÓN Y PERSISTENCIA
+let cart = JSON.parse(localStorage.getItem('kaue_cart')) || [];
+let currentUser = JSON.parse(localStorage.getItem('kaue_user')) || null;
+let activeTimerInterval = null;
 
-// ELEMENTOS DOM
+// ELEMENTOS DEL DOM
 const productsGrid = document.getElementById('productsGrid');
 const cartBtn = document.getElementById('cartBtn');
 const cartCount = document.getElementById('cartCount');
@@ -42,6 +42,7 @@ const productModalBody = document.getElementById('productModalBody');
 const closeProductModal = document.getElementById('closeProductModal');
 
 const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
 const authModal = document.getElementById('authModal');
 const closeAuthModal = document.getElementById('closeAuthModal');
 const tabLogin = document.getElementById('tabLogin');
@@ -50,7 +51,7 @@ const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const userGreeting = document.getElementById('userGreeting');
 
-// 1. RENDERIZAR PRODUCTOS Y FILTROS
+// 1. RENDERIZADO DEL MENÚ
 function renderProducts(categoryFilter = "todos") {
   productsGrid.innerHTML = "";
   const filtered = categoryFilter === "todos" ? products : products.filter(p => p.category === categoryFilter);
@@ -95,13 +96,18 @@ window.openProductModal = function(id) {
 
 closeProductModal.addEventListener('click', () => productModal.classList.add('hidden'));
 
-// 3. GESTIÓN DEL CARRITO
+// 3. CARRITO CON GUARDADO AUTOMÁTICO (LOCALSTORAGE)
 window.addToCart = function(id) {
   const p = products.find(prod => prod.id === id);
   cart.push(p);
+  saveCartState();
   updateCartUI();
   productModal.classList.add('hidden');
 };
+
+function saveCartState() {
+  localStorage.setItem('kaue_cart', JSON.stringify(cart));
+}
 
 function updateCartUI() {
   cartCount.textContent = cart.length;
@@ -111,10 +117,10 @@ function updateCartUI() {
   cart.forEach((item, index) => {
     total += item.price;
     const row = document.createElement('div');
-    row.style.cssText = "display:flex; justify-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:4px;";
+    row.style.cssText = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:4px;";
     row.innerHTML = `
-      <span>${item.name} - <strong>$${item.price}</strong></span>
-      <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; cursor:pointer;">&times;</button>
+      <span>${item.name} - <strong>$${item.price.toFixed(2)}</strong></span>
+      <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.2rem; cursor:pointer;">&times;</button>
     `;
     cartItemsList.appendChild(row);
   });
@@ -124,13 +130,14 @@ function updateCartUI() {
 
 window.removeFromCart = function(index) {
   cart.splice(index, 1);
+  saveCartState();
   updateCartUI();
 };
 
 cartBtn.addEventListener('click', () => cartModal.classList.remove('hidden'));
 closeCartModal.addEventListener('click', () => cartModal.classList.add('hidden'));
 
-// 4. AUTENTICACIÓN
+// 4. AUTENTICACIÓN Y MANEJO DE SESIÓN
 loginBtn.addEventListener('click', () => authModal.classList.remove('hidden'));
 closeAuthModal.addEventListener('click', () => authModal.classList.add('hidden'));
 
@@ -147,23 +154,40 @@ tabRegister.addEventListener('click', () => {
 registerForm.addEventListener('submit', (e) => {
   e.preventDefault();
   currentUser = { name: document.getElementById('regName').value, email: document.getElementById('regEmail').value };
+  localStorage.setItem('kaue_user', JSON.stringify(currentUser));
   onUserLoggedIn();
 });
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   currentUser = { name: "Cliente Kaué", email: document.getElementById('loginEmail').value };
+  localStorage.setItem('kaue_user', JSON.stringify(currentUser));
   onUserLoggedIn();
 });
+
+logoutBtn.addEventListener('click', () => {
+  currentUser = null;
+  localStorage.removeItem('kaue_user');
+  userGreeting.classList.add('hidden');
+  logoutBtn.classList.add('hidden');
+  loginBtn.classList.remove('hidden');
+});
+
+function checkUserSession() {
+  if (currentUser) {
+    onUserLoggedIn();
+  }
+}
 
 function onUserLoggedIn() {
   authModal.classList.add('hidden');
   loginBtn.classList.add('hidden');
+  logoutBtn.classList.remove('hidden');
   userGreeting.classList.remove('hidden');
   userGreeting.textContent = `Hola, ${currentUser.name}`;
 }
 
-// 5. COMPROBANTE PDF Y ORDEN
+// 5. COMPROBANTE PDF FORMATEADO Y DESCARGA
 checkoutBtn.addEventListener('click', () => {
   if (cart.length === 0) {
     alert("El carrito está vacío");
@@ -175,35 +199,53 @@ checkoutBtn.addEventListener('click', () => {
     return;
   }
 
-  // Llenar plantilla PDF
-  document.getElementById('pdfFolio').textContent = "Folio: KC-" + Math.floor(100000 + Math.random() * 900000);
-  document.getElementById('pdfDate').textContent = "Fecha: " + new Date().toLocaleString();
+  const subtotal = cart.reduce((acc, item) => acc + item.price, 0);
+  const tax = subtotal * 0.16;
+  const total = subtotal;
+
+  document.getElementById('pdfFolio').textContent = "KC-" + Math.floor(100000 + Math.random() * 900000);
+  document.getElementById('pdfDate').textContent = new Date().toLocaleString();
   document.getElementById('pdfClientName').textContent = currentUser.name;
   document.getElementById('pdfClientEmail').textContent = currentUser.email;
 
   const tbody = document.getElementById('pdfTableBody');
   tbody.innerHTML = "";
-  let total = 0;
 
   cart.forEach(item => {
-    total += item.price;
-    tbody.innerHTML += `<tr><td>${item.name}</td><td>1</td><td>$${item.price}</td><td>$${item.price}</td></tr>`;
+    tbody.innerHTML += `
+      <tr>
+        <td>1</td>
+        <td>${item.name}</td>
+        <td class="text-right">$${item.price.toFixed(2)}</td>
+        <td class="text-right">$${item.price.toFixed(2)}</td>
+      </tr>
+    `;
   });
 
+  document.getElementById('pdfSubtotal').textContent = `$${(subtotal - tax).toFixed(2)} MXN`;
+  document.getElementById('pdfTax').textContent = `$${tax.toFixed(2)} MXN`;
   document.getElementById('pdfTotalAmount').textContent = `$${total.toFixed(2)} MXN`;
 
-  // Descargar PDF
   const element = document.getElementById('pdfInvoiceTemplate');
-  element.classList.remove('hidden');
   
-  html2pdf().from(element).save('Ticket_Kaue_Coffee.pdf').then(() => {
-    element.classList.add('hidden');
+  const opt = {
+    margin: 10,
+    filename: `Ticket_Kaue_Coffee_${Date.now()}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save().then(() => {
     cart = [];
+    saveCartState();
     updateCartUI();
     cartModal.classList.add('hidden');
     
-    // Iniciar temporizador en la burbuja de notificación
-    iniciarNotificacionPedido(15);
+    // Guardar inicio de pedido en LocalStorage (15 minutos)
+    const orderEndTime = Date.now() + (15 * 60 * 1000);
+    localStorage.setItem('kaue_order_endtime', orderEndTime);
+    iniciarNotificacionPedido();
   });
 });
 
@@ -225,11 +267,9 @@ function sendBotMessage() {
   const text = chatbotInput.value.trim();
   if (!text) return;
 
-  // Renderizar mensaje de usuario
   chatbotMessages.innerHTML += `<div class="message user-message">${text}</div>`;
   chatbotInput.value = "";
 
-  // Lógica de respuesta del Bot
   setTimeout(() => {
     let reply = "Lo siento, no entendí bien. ¿Deseas consultar el menú u horarios?";
     const q = text.toLowerCase();
@@ -239,7 +279,7 @@ function sendBotMessage() {
     } else if (q.includes("menu") || q.includes("producto") || q.includes("cafe")) {
       reply = "Contamos con 20 productos entre cafés calientes, bebidas frías, repostería y bocadillos salados.";
     } else if (q.includes("ubicacion") || q.includes("donde")) {
-      reply = "Nos encontramos en la Av. Principal de la ciudad, frente al parque central.";
+      reply = "Nos encontramos en la Av. Principal #123, en el Centro Histórico.";
     }
 
     chatbotMessages.innerHTML += `<div class="message bot-message">${reply}</div>`;
@@ -247,7 +287,7 @@ function sendBotMessage() {
   }, 600);
 }
 
-// 7. NOTIFICACIÓN DE ESTADO DE PEDIDO
+// 7. BURBUJA DE NOTIFICACIÓN DE PEDIDO CON PERSISTENCIA
 const notificationBtn = document.getElementById('notificationBtn');
 const notificationPanel = document.getElementById('notificationPanel');
 const closeNotificationBtn = document.getElementById('closeNotificationBtn');
@@ -257,46 +297,54 @@ const notificationBadge = document.getElementById('notificationBadge');
 notificationBtn.addEventListener('click', () => notificationPanel.classList.toggle('hidden'));
 closeNotificationBtn.addEventListener('click', () => notificationPanel.classList.add('hidden'));
 
-function iniciarNotificacionPedido(tiempoMinutos = 15) {
-  let tiempoRestanteSegundos = tiempoMinutos * 60;
+function iniciarNotificacionPedido() {
+  const orderEndTime = localStorage.getItem('kaue_order_endtime');
+  if (!orderEndTime) {
+    notificationBadge.classList.add('hidden');
+    notificationBody.innerHTML = `<p class="no-order">No tienes ningún pedido activo en este momento.</p>`;
+    return;
+  }
+
   notificationBadge.classList.remove('hidden');
 
-  if (activeTimer) clearInterval(activeTimer);
+  if (activeTimerInterval) clearInterval(activeTimerInterval);
 
-  function actualizarContenido() {
-    const minutos = Math.floor(tiempoRestanteSegundos / 60);
-    const segundos = tiempoRestanteSegundos % 60;
-    const tiempoFormateado = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+  function actualizar() {
+    const ahora = Date.now();
+    const tiempoRestante = Math.floor((orderEndTime - ahora) / 1000);
 
-    if (tiempoRestanteSegundos > 0) {
+    if (tiempoRestante > 0) {
+      const minutos = Math.floor(tiempoRestante / 60);
+      const segundos = tiempoRestante % 60;
+      const tiempoFormateado = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+
       notificationBody.innerHTML = `
         <div class="order-status-card">
           <span>☕ <strong>¡Tu pedido está en preparación!</strong></span>
           <div class="timer-box">
-            Tiempo estimado: <span id="timer">${tiempoFormateado} min</span>
+            Tiempo estimado: <span>${tiempoFormateado} min</span>
           </div>
-          <small style="color:#666;">Te avisaremos cuando tu orden esté lista para entregar.</small>
+          <small style="color:#666;">Te avisaremos cuando tu orden esté lista para recoger en barra.</small>
         </div>
       `;
     } else {
-      clearInterval(activeTimer);
+      clearInterval(activeTimerInterval);
       notificationBadge.classList.add('hidden');
       notificationBody.innerHTML = `
         <div class="order-status-card">
           <span style="color: #27ae60;">✅ <strong>¡Tu pedido está listo!</strong></span>
-          <p style="margin: 4px 0 0 0;">Puedes pasar a recogerlo a la barra.</p>
+          <p style="margin: 4px 0 0 0;">Puedes pasar a recogerlo en la barra.</p>
         </div>
       `;
     }
   }
 
-  actualizarContenido();
-
-  activeTimer = setInterval(() => {
-    tiempoRestanteSegundos--;
-    actualizarContenido();
-  }, 1000);
+  actualizar();
+  activeTimerInterval = setInterval(actualizar, 1000);
 }
 
-// INICIALIZACIÓN
+// INICIALIZACIÓN DE LA PÁGINA
 renderProducts();
+updateCartUI();
+checkUserSession();
+iniciarNotificacionPedido();
