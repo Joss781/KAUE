@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kaué Coffee - Menú & Servicios</title>
+  <title>Kaué Coffee - Café de especialidad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="styles.css">
@@ -11,48 +14,93 @@
 <body>
 
   <header class="navbar">
-    <div class="logo">
-      <i class="fa-solid fa-mug-hot"></i>
-      <span>Kaué Coffee</span>
-    </div>
-    <nav>
-      <a href="#inicio">Inicio</a>
-      <a href="#menu">Menú</a>
-      <a href="#nosotros">Nosotros</a>
+    <a href="#inicio" class="logo"><i class="fa-solid fa-mug-hot"></i><span>Kaué Coffee</span></a>
+    <nav id="mainNav">
+      <a href="#inicio" data-nav="inicio">Inicio</a>
+      <a href="#menu" data-nav="menu">Menú</a>
+      <a href="#nosotros" data-nav="nosotros">Nosotros</a>
     </nav>
     <div class="user-actions">
       <span id="userGreeting" class="user-greeting hidden"></span>
-      <button id="loginBtn" class="btn-secondary"><i class="fa-solid fa-user"></i> Iniciar Sesión</button>
-      <button id="logoutBtn" class="btn-secondary hidden"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
-      <button id="cartBtn" class="btn-primary">
-        <i class="fa-solid fa-cart-shopping"></i> <span id="cartCount">0</span>
-      </button>
+      <button id="loginBtn" class="btn-secondary"><i class="fa-solid fa-user"></i> <span class="btn-label">Iniciar sesión</span></button>
+      <button id="logoutBtn" class="btn-secondary hidden"><i class="fa-solid fa-right-from-bracket"></i> <span class="btn-label">Salir</span></button>
+      <button id="cartBtn" class="btn-primary" aria-label="Ver carrito"><i class="fa-solid fa-cart-shopping"></i> <span id="cartCount">0</span></button>
     </div>
   </header>
 
-  <section id="inicio" class="hero">
-    <div class="hero-content">
-      <h1>Sabor Artesanal en Cada Gota</h1>
-      <p>Descubre nuestra selección de cafés de especialidad, postres frescos y bebidas artesanales.</p>
-      <a href="#menu" class="btn-cta">Explorar Menú</a>
-    </div>
-  </section>
+  <!-- ========== VISTA: INICIO ========== -->
+  <main id="homeView">
+    <section id="inicio" class="hero">
+      <div class="hero-content">
+        <h1>Sabor artesanal<br>en cada gota</h1>
+        <p>Cafés de especialidad, repostería recién horneada y bocadillos para cualquier hora. Pide desde aquí y recoge en barra.</p>
+        <div class="hero-actions">
+          <a href="#menu" class="btn-cta">Ver el menú</a>
+          <a href="#nosotros" class="btn-ghost">Conócenos</a>
+        </div>
+      </div>
+      <div class="hero-badge">
+        <strong>20</strong>
+        <span>productos<br>en el menú</span>
+      </div>
+    </section>
 
-  <section id="menu" class="menu-section">
-    <h2>Nuestro Menú</h2>
+    <section class="features">
+      <div class="feature"><i class="fa-solid fa-seedling"></i><h3>Café de origen</h3><p>Granos 100% arábica, tostados en pequeños lotes.</p></div>
+      <div class="feature"><i class="fa-solid fa-bread-slice"></i><h3>Horneado cada día</h3><p>Croissants, muffins y brownies que salen del horno por la mañana.</p></div>
+      <div class="feature"><i class="fa-solid fa-bell-concierge"></i><h3>Pide y recoge</h3><p>Arma tu pedido en línea y sigue el tiempo de preparación en vivo.</p></div>
+    </section>
+
+    <section class="home-section">
+      <div class="section-head">
+        <h2>Los favoritos de la casa</h2>
+        <a href="#menu" class="link-more">Ver todo el menú</a>
+      </div>
+      <div class="products-grid" id="featuredGrid"></div>
+    </section>
+
+    <section class="home-section">
+      <h2 class="center">Pedir es muy sencillo</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><h3>Elige</h3><p>Explora el menú y agrega lo que se te antoje.</p></div>
+        <div class="step"><span class="step-num">2</span><h3>Confirma</h3><p>Inicia sesión y descarga tu ticket en PDF.</p></div>
+        <div class="step"><span class="step-num">3</span><h3>Recoge</h3><p>Te avisamos en la campana cuando esté listo.</p></div>
+      </div>
+    </section>
+
+    <section id="nosotros" class="about">
+      <div class="about-text">
+        <h2>Un rincón para quedarse un rato</h2>
+        <p>Kaué Coffee nació del gusto por el buen café y la comida hecha con calma. Cuidamos cada taza, desde el grano hasta la barra.</p>
+      </div>
+      <ul class="about-info">
+        <li><i class="fa-solid fa-location-dot"></i> Av. Principal #123, Centro Histórico</li>
+        <li><i class="fa-solid fa-clock"></i> Lunes a domingo, 7:00 a 22:00</li>
+        <li><i class="fa-solid fa-phone"></i> (222) 123-4567</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- ========== VISTA: MENÚ ========== -->
+  <section id="menuView" class="menu-section hidden">
+    <h2>Nuestro menú</h2>
     <p class="section-subtitle">Selecciona tus productos favoritos y realiza tu pedido en línea.</p>
-    
     <div class="category-filters">
       <button class="filter-btn active" data-category="todos">Todos</button>
-      <button class="filter-btn" data-category="calientes">Cafés Calientes</button>
-      <button class="filter-btn" data-category="frias">Bebidas Frías</button>
+      <button class="filter-btn" data-category="calientes">Cafés calientes</button>
+      <button class="filter-btn" data-category="frias">Bebidas frías</button>
       <button class="filter-btn" data-category="reposteria">Repostería</button>
-      <button class="filter-btn" data-category="salados">Bocadillos Salados</button>
+      <button class="filter-btn" data-category="salados">Bocadillos salados</button>
     </div>
-
     <div class="products-grid" id="productsGrid"></div>
   </section>
 
+  <footer class="footer">
+    <span><i class="fa-solid fa-mug-hot"></i> Kaué Coffee</span>
+    <span>Café de especialidad &amp; repostería</span>
+  </footer>
+
+  <!-- MODALES -->
   <div id="productModal" class="modal hidden">
     <div class="modal-content">
       <span class="close-modal" id="closeProductModal">&times;</span>
@@ -64,19 +112,17 @@
     <div class="modal-content auth-content">
       <span class="close-modal" id="closeAuthModal">&times;</span>
       <div class="auth-tabs">
-        <button id="tabLogin" class="tab-btn active">Iniciar Sesión</button>
-        <button id="tabRegister" class="tab-btn">Crear Cuenta</button>
+        <button id="tabLogin" class="tab-btn active">Iniciar sesión</button>
+        <button id="tabRegister" class="tab-btn">Crear cuenta</button>
       </div>
-
       <form id="loginForm" class="auth-form">
-        <h3>Bienvenido de Nuevo</h3>
+        <h3>Bienvenido de nuevo</h3>
         <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
         <input type="password" id="loginPassword" placeholder="Contraseña" required>
         <button type="submit" class="btn-primary full-width">Ingresar</button>
       </form>
-
       <form id="registerForm" class="auth-form hidden">
-        <h3>Crea tu Cuenta</h3>
+        <h3>Crea tu cuenta</h3>
         <input type="text" id="regName" placeholder="Nombre completo" required>
         <input type="email" id="regEmail" placeholder="Correo electrónico" required>
         <input type="password" id="regPassword" placeholder="Contraseña" required>
@@ -88,93 +134,83 @@
   <div id="cartModal" class="modal hidden">
     <div class="modal-content">
       <span class="close-modal" id="closeCartModal">&times;</span>
-      <h3>Tu Pedido</h3>
+      <h3>Tu pedido</h3>
       <div id="cartItemsList" class="cart-items-list"></div>
       <div class="cart-summary">
         <p>Total: <strong id="cartTotal">$0.00 MXN</strong></p>
-        <button id="checkoutBtn" class="btn-primary full-width">Confirmar Pedido y Descargar Ticket (PDF)</button>
+        <button id="checkoutBtn" class="btn-primary full-width">Confirmar pedido y descargar ticket (PDF)</button>
       </div>
     </div>
   </div>
 
+  <!-- NOTIFICACIONES -->
   <div class="notification-wrapper">
     <div class="notification-panel hidden" id="notificationPanel">
       <div class="notification-header">
-        <h4><i class="fa-solid fa-clock-rotate-left"></i> Estado de tu Pedido</h4>
+        <h4><i class="fa-solid fa-clock-rotate-left"></i> Estado de tu pedido</h4>
         <button id="closeNotificationBtn">&times;</button>
       </div>
       <div class="notification-body" id="notificationBody">
         <p class="no-order">No tienes ningún pedido activo en este momento.</p>
       </div>
     </div>
-
     <button class="notification-btn" id="notificationBtn" aria-label="Notificaciones de pedido">
       <i class="fa-solid fa-bell"></i>
       <span class="notification-badge hidden" id="notificationBadge">1</span>
     </button>
   </div>
 
+  <!-- CHATBOT -->
   <div class="chatbot-wrapper">
     <div class="chatbot-window hidden" id="chatbotWindow">
       <div class="chatbot-header">
-        <div class="bot-info">
-          <i class="fa-solid fa-robot"></i>
-          <span>Asistente Kaué</span>
-        </div>
+        <div class="bot-info"><i class="fa-solid fa-robot"></i><span>Asistente Kaué</span></div>
         <button id="closeChatbotBtn">&times;</button>
       </div>
       <div class="chatbot-messages" id="chatbotMessages">
-        <div class="message bot-message">¡Hola! ☕ ¿En qué puedo ayudarte hoy? Pregúntame sobre nuestro menú, horarios o recomendaciones.</div>
+        <div class="message bot-message">¡Hola! ☕ Soy el asistente de Kaué. Toca una opción o escríbeme tu duda.</div>
+      </div>
+      <div class="chatbot-chips" id="chatbotChips">
+        <button data-q="horarios">Horarios</button>
+        <button data-q="recomiéndame algo">Recomiéndame</button>
+        <button data-q="menú">Menú</button>
+        <button data-q="ubicación">Ubicación</button>
+        <button data-q="cómo pido">Cómo pedir</button>
       </div>
       <div class="chatbot-input-area">
         <input type="text" id="chatbotInput" placeholder="Escribe tu duda aquí...">
-        <button id="sendChatbotBtn"><i class="fa-solid fa-paper-plane"></i></button>
+        <button id="sendChatbotBtn" aria-label="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
-
-    <button class="chatbot-btn" id="chatbotBtn" aria-label="Abrir asistente virtual">
-      <i class="fa-solid fa-comments"></i>
-    </button>
+    <button class="chatbot-btn" id="chatbotBtn" aria-label="Abrir asistente virtual"><i class="fa-solid fa-comments"></i></button>
   </div>
 
+  <!-- PLANTILLA DEL TICKET PDF -->
   <div id="pdfContainer" class="pdf-offscreen">
     <div id="pdfInvoiceTemplate" class="pdf-invoice">
       <div class="invoice-header">
         <h2>☕ KAUÉ COFFEE</h2>
-        <p class="invoice-subtitle">Café de Especialidad & Repostería</p>
+        <p class="invoice-subtitle">Café de Especialidad &amp; Repostería</p>
         <p>Av. Principal #123, Centro Histórico</p>
         <p>Tel: (222) 123-4567 | RFC: KAU120304-CF1</p>
       </div>
-      
       <div class="invoice-divider"></div>
-
       <div class="invoice-details">
         <p><strong>Folio:</strong> <span id="pdfFolio"></span></p>
         <p><strong>Fecha:</strong> <span id="pdfDate"></span></p>
         <p><strong>Cliente:</strong> <span id="pdfClientName"></span></p>
         <p><strong>Correo:</strong> <span id="pdfClientEmail"></span></p>
       </div>
-
       <table class="invoice-table">
-        <thead>
-          <tr>
-            <th>Cant.</th>
-            <th>Descripción</th>
-            <th class="text-right">Precio</th>
-            <th class="text-right">Subtotal</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Cant.</th><th>Descripción</th><th class="text-right">Precio</th><th class="text-right">Subtotal</th></tr></thead>
         <tbody id="pdfTableBody"></tbody>
       </table>
-
       <div class="invoice-divider"></div>
-
       <div class="invoice-summary">
         <p><span>Subtotal:</span> <span id="pdfSubtotal">$0.00 MXN</span></p>
         <p><span>IVA (16%):</span> <span id="pdfTax">$0.00 MXN</span></p>
         <p class="invoice-total"><span>TOTAL:</span> <span id="pdfTotalAmount">$0.00 MXN</span></p>
       </div>
-
       <div class="invoice-footer">
         <p>¡Muchas gracias por tu preferencia!</p>
         <p>Conserva este ticket para cualquier aclaración o para recoger tu pedido en barra.</p>
