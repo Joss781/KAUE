@@ -1,30 +1,31 @@
 // ============ PRODUCTOS ============
-// "img" es opcional: si está vacío o la imagen falla, se muestra el emoji del producto.
-// Para poner tu propia foto: img: "https://tu-enlace/foto.jpg" (o "img/empanada.jpg" si la subes a tu proyecto).
+// Cada producto lleva su foto en "img". Para usar tu propia foto, cambia la URL por la tuya
+// (por ejemplo "img/empanada.jpg" si subes la imagen a una carpeta img/ de tu proyecto).
 const U = id => `https://images.unsplash.com/${id}?w=600`;
+// Fotos por palabra clave (una foto fija por producto gracias a lock)
+const F = (tag, n) => `https://loremflickr.com/600/400/${tag}?lock=${n}`;
 const products = [
-  { id: 1, name: "Café Americano", category: "calientes", price: 45, emoji: "☕", img: U("photo-1514432324607-a09d9b4aefdd"), desc: "Espresso diluido en agua caliente con un sabor balanceado." },
-  { id: 2, name: "Cappuccino Tradicional", category: "calientes", price: 55, emoji: "☕", img: U("photo-1572442388796-11668a67e53d"), desc: "Espresso, leche vaporizada y abundante espuma de leche." },
-  { id: 3, name: "Latte de Vainilla", category: "calientes", price: 60, emoji: "🥛", img: U("photo-1561882468-9110e03e0f78"), desc: "Espresso suave con leche cremosa y toque de vainilla." },
-  { id: 4, name: "Espresso Doble", category: "calientes", price: 40, emoji: "☕", img: U("photo-1510591509098-f4fdc6d0ff04"), desc: "Extracción concentrada de café 100% arábica." },
-  { id: 5, name: "Mocha Blanco", category: "calientes", price: 65, emoji: "🍫", img: "", desc: "Espresso con chocolate blanco cremoso y leche al vapor." },
-  { id: 6, name: "Cold Brew Artesanal", category: "frias", price: 60, emoji: "🧊", img: "", desc: "Café infusionado en frío durante 18 horas." },
-  { id: 7, name: "Iced Caramel Macchiato", category: "frias", price: 68, emoji: "🥤", img: "", desc: "Espresso helado con jarabe de caramelo y leche fría." },
-  { id: 8, name: "Frappé de Chocolate", category: "frias", price: 70, emoji: "🍨", img: "", desc: "Bebida batida con hielo, cacao puro y crema batida." },
-  { id: 9, name: "Smoothie de Frutos Rojos", category: "frias", price: 65, emoji: "🍓", img: "", desc: "Mezcla natural de fresas, zarzamoras y yogurt." },
-  { id: 10, name: "Té Matcha Helado", category: "frias", price: 62, emoji: "🍵", img: "", desc: "Té verde matcha con leche de almendra y hielo." },
-  { id: 11, name: "Croissant de Mantequilla", category: "reposteria", price: 38, emoji: "🥐", img: "", desc: "Masa hojaldrada dorada y crujiente." },
-  { id: 12, name: "Muffin de Arándanos", category: "reposteria", price: 42, emoji: "🧁", img: "", desc: "Esponjoso panecillo horneado con arándanos frescos." },
-  { id: 13, name: "Cheesecake de Frutilla", category: "reposteria", price: 58, emoji: "🍰", img: "", desc: "Pastel de queso cremoso con mermelada artesanal." },
-  { id: 14, name: "Brownie de Nuez", category: "reposteria", price: 45, emoji: "🍫", img: "", desc: "Pastel denso de chocolate oscuro y trozos de nuez." },
-  { id: 15, name: "Donut Glaseada", category: "reposteria", price: 30, emoji: "🍩", img: "", desc: "Rosquilla horneada glaseada con una fina capa de azúcar." },
-  { id: 16, name: "Panini Pavo y Queso", category: "salados", price: 85, emoji: "🥪", img: "", desc: "Pechuga de pavo, queso gouda y aderezo artesanal al grill." },
-  { id: 17, name: "Bagel de Salmón", category: "salados", price: 95, emoji: "🥯", img: "", desc: "Bagel tostado con queso crema, salmón ahumado y alcaparras." },
-  { id: 18, name: "Ciabatta Caprese", category: "salados", price: 80, emoji: "🍅", img: "", desc: "Queso mozzarella fresco, jitomate y pesto de albahaca." },
-  { id: 19, name: "Empanada de Jamón y Queso", category: "salados", price: 35, emoji: "🥟", img: "", desc: "Masa crujiente y horneada rellena de fino jamón y queso derretido." },
-  { id: 20, name: "Quiche de Espinacas", category: "salados", price: 65, emoji: "🥧", img: "", desc: "Tarta salada horneada con espinacas y queso ricotta." }
+  { id: 1, name: "Café Americano", category: "calientes", price: 45, img: U("photo-1514432324607-a09d9b4aefdd"), desc: "Espresso diluido en agua caliente con un sabor balanceado." },
+  { id: 2, name: "Cappuccino Tradicional", category: "calientes", price: 55, img: U("photo-1572442388796-11668a67e53d"), desc: "Espresso, leche vaporizada y abundante espuma de leche." },
+  { id: 3, name: "Latte de Vainilla", category: "calientes", price: 60, img: U("photo-1561882468-9110e03e0f78"), desc: "Espresso suave con leche cremosa y toque de vainilla." },
+  { id: 4, name: "Espresso Doble", category: "calientes", price: 40, img: U("photo-1510591509098-f4fdc6d0ff04"), desc: "Extracción concentrada de café 100% arábica." },
+  { id: 5, name: "Mocha Blanco", category: "calientes", price: 65, img: F("mocha,coffee", 5), desc: "Espresso con chocolate blanco cremoso y leche al vapor." },
+  { id: 6, name: "Cold Brew Artesanal", category: "frias", price: 60, img: F("coldbrew", 6), desc: "Café infusionado en frío durante 18 horas." },
+  { id: 7, name: "Iced Caramel Macchiato", category: "frias", price: 68, img: F("icedcoffee", 7), desc: "Espresso helado con jarabe de caramelo y leche fría." },
+  { id: 8, name: "Frappé de Chocolate", category: "frias", price: 70, img: F("frappe", 8), desc: "Bebida batida con hielo, cacao puro y crema batida." },
+  { id: 9, name: "Smoothie de Frutos Rojos", category: "frias", price: 65, img: F("smoothie", 9), desc: "Mezcla natural de fresas, zarzamoras y yogurt." },
+  { id: 10, name: "Té Matcha Helado", category: "frias", price: 62, img: F("matcha", 10), desc: "Té verde matcha con leche de almendra y hielo." },
+  { id: 11, name: "Croissant de Mantequilla", category: "reposteria", price: 38, img: F("croissant", 11), desc: "Masa hojaldrada dorada y crujiente." },
+  { id: 12, name: "Muffin de Arándanos", category: "reposteria", price: 42, img: F("muffin", 12), desc: "Esponjoso panecillo horneado con arándanos frescos." },
+  { id: 13, name: "Cheesecake de Frutilla", category: "reposteria", price: 58, img: F("cheesecake", 13), desc: "Pastel de queso cremoso con mermelada artesanal." },
+  { id: 14, name: "Brownie de Nuez", category: "reposteria", price: 45, img: F("brownie", 14), desc: "Pastel denso de chocolate oscuro y trozos de nuez." },
+  { id: 15, name: "Donut Glaseada", category: "reposteria", price: 30, img: F("donut", 15), desc: "Rosquilla horneada glaseada con una fina capa de azúcar." },
+  { id: 16, name: "Panini Pavo y Queso", category: "salados", price: 85, img: F("panini", 16), desc: "Pechuga de pavo, queso gouda y aderezo artesanal al grill." },
+  { id: 17, name: "Bagel de Salmón", category: "salados", price: 95, img: F("bagel", 17), desc: "Bagel tostado con queso crema, salmón ahumado y alcaparras." },
+  { id: 18, name: "Ciabatta Caprese", category: "salados", price: 80, img: F("ciabatta", 18), desc: "Queso mozzarella fresco, jitomate y pesto de albahaca." },
+  { id: 19, name: "Empanada de Jamón y Queso", category: "salados", price: 35, img: F("empanada", 19), desc: "Masa crujiente y horneada rellena de fino jamón y queso derretido." },
+  { id: 20, name: "Quiche de Espinacas", category: "salados", price: 65, img: F("quiche", 20), desc: "Tarta salada horneada con espinacas y queso ricotta." }
 ];
-const FEATURED_IDS = [2, 7, 11, 17];
 
 // ============ ESTADO ============
 // El carrito ahora agrupa por cantidad: [{id, qty}]
@@ -43,7 +44,7 @@ const byId = id => products.find(p => p.id === id);
 function cardHTML(p) {
   const img = p.img ? `<img src="${p.img}" alt="${esc(p.name)}" loading="lazy" onerror="this.remove()">` : '';
   return `
-    <div class="card-media cat-${p.category}"><span>${p.emoji}</span>${img}</div>
+    <div class="card-media cat-${p.category}">${img}</div>
     <div class="product-info">
       <h3>${esc(p.name)}</h3>
       <div class="product-price">${money(p.price)}</div>
@@ -92,7 +93,7 @@ window.openProductModal = function (id) {
   if (!p) return;
   const img = p.img ? `<img src="${p.img}" alt="${esc(p.name)}" onerror="this.remove()">` : '';
   $('productModalBody').innerHTML = `
-    <div class="modal-img cat-${p.category}"><span>${p.emoji}</span>${img}</div>
+    <div class="modal-img cat-${p.category}">${img}</div>
     <h2>${esc(p.name)}</h2>
     <p>${esc(p.desc)}</p>
     <h3>${money(p.price)}</h3>
@@ -226,18 +227,34 @@ $('checkoutBtn').addEventListener('click', () => {
     margin: 10,
     filename: `Ticket_Kaue_Coffee_${Date.now()}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
+    html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, backgroundColor: '#ffffff' },
     jsPDF: { unit: 'mm', format: 'a5', orientation: 'portrait' }
   };
 
-  html2pdf().set(opt).from($('pdfInvoiceTemplate')).save().then(() => {
-    cart = [];
-    saveCartState();
-    updateCartUI();
-    $('cartModal').classList.add('hidden');
-    localStorage.setItem('kaue_order_endtime', Date.now() + 15 * 60 * 1000);
-    iniciarNotificacionPedido();
-  });
+  // El ticket se dibuja en blanco si está fuera de pantalla: se usa una copia visible mientras se genera.
+  const stage = document.createElement('div');
+  stage.className = 'pdf-stage';
+  const clone = $('pdfInvoiceTemplate').cloneNode(true);
+  clone.removeAttribute('id');
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  const limpiar = () => stage.remove();
+  setTimeout(() => {
+    html2pdf().set(opt).from(clone).save().then(() => {
+      limpiar();
+      cart = [];
+      saveCartState();
+      updateCartUI();
+      $('cartModal').classList.add('hidden');
+      localStorage.setItem('kaue_order_endtime', Date.now() + 15 * 60 * 1000);
+      iniciarNotificacionPedido();
+    }).catch(err => {
+      limpiar();
+      console.error(err);
+      alert("No se pudo generar el ticket. Intenta de nuevo.");
+    });
+  }, 250);
 });
 
 // ============ 7. CHATBOT ============
@@ -277,7 +294,7 @@ function botReply(text) {
     else if (has(q, ['salado', 'comer', 'hambre', 'sandwich'])) cat = 'salados';
     else if (has(q, ['caliente', 'cafe'])) cat = 'calientes';
     const p = pick(cat ? products.filter(x => x.category === cat) : products);
-    return `Te recomiendo ${p.name} ${p.emoji}: ${p.desc} (${money(p.price)})`;
+    return `Te recomiendo ${p.name}: ${p.desc} (${money(p.price)})`;
   }
   if (has(q, ['menu', 'producto', 'carta', 'que tienen', 'venden'])) return "Tenemos 20 productos: " + Object.values(CAT_NAMES).join(", ") + ". Entra a la sección Menú para verlos todos.";
   if (has(q, ['gracias'])) return "¡De nada! Aquí estoy si necesitas algo más ☕";
@@ -337,7 +354,6 @@ function iniciarNotificacionPedido() {
 
 // ============ INICIO ============
 renderProducts();
-renderGrid($('featuredGrid'), FEATURED_IDS.map(byId));
 updateCartUI();
 if (currentUser) onUserLoggedIn();
 iniciarNotificacionPedido();

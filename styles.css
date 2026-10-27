@@ -199,6 +199,32 @@ h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.15; }
 .invoice-total { font-size: 15px; font-weight: 700; color: #1b365d; margin-top: 8px !important; }
 .invoice-footer { margin-top: 25px; text-align: center; font-size: 11px; color: #666; }
 
+/* PRESENTACIÓN DEL NEGOCIO */
+.story { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; }
+.story-text h2 { margin-bottom: 1rem; }
+.story-text p { color: #3d4452; margin-bottom: .9rem; max-width: 62ch; line-height: 1.7; }
+.story-photo { border-radius: 20px; overflow: hidden; min-height: 340px; background: linear-gradient(135deg, #f1dcc3, #d9b48a); box-shadow: var(--shadow); }
+.story-photo img { width: 100%; height: 100%; min-height: 340px; object-fit: cover; display: block; }
+.lead { color: var(--muted); margin-top: .4rem; }
+.values { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+.value { background: var(--white); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border-top: 4px solid var(--accent); }
+.value i { font-size: 1.4rem; color: var(--primary); margin-bottom: .7rem; }
+.value h3 { font-size: 1.15rem; color: var(--primary); margin-bottom: .4rem; }
+.value p { color: var(--muted); font-size: .93rem; }
+.process { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+.process-item { text-align: center; padding: 1rem; }
+.process-item i { width: 58px; height: 58px; border-radius: 50%; background: var(--primary); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: .7rem; }
+.process-item h3 { color: var(--primary); font-size: 1.1rem; }
+.process-item p { color: var(--muted); font-size: .92rem; }
+.mission { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+.mission-card { background: var(--white); border-left: 5px solid var(--accent); border-radius: var(--radius); padding: 1.6rem; box-shadow: var(--shadow); }
+.mission-card h3 { color: var(--primary); margin-bottom: .5rem; }
+.mission-card p { color: #3d4452; line-height: 1.65; }
+
+/* COPIA VISIBLE DEL TICKET MIENTRAS SE GENERA EL PDF */
+.pdf-stage { position: fixed; inset: 0; background: #fff; z-index: 5000; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 0; }
+.pdf-stage .pdf-invoice { flex: none; }
+
 /* RESPONSIVE */
 @media (max-width: 820px) {
   .navbar { flex-wrap: wrap; padding: .7rem 1rem; }
@@ -207,6 +233,7 @@ h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.15; }
   .hero { padding: 3rem 1.5rem; min-height: 460px; }
   .hero-badge { display: none; }
   .about { grid-template-columns: 1fr; margin: 4rem 1rem 0; padding: 1.8rem; }
+  .story { grid-template-columns: 1fr; gap: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
