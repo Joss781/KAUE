@@ -13,12 +13,42 @@
 </head>
 <body>
 
+  <!-- ANIMACIÓN DE ENTRADA -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash-inner">
+      <div class="cup-stage">
+        <div class="steam"><i></i><i></i><i></i></div>
+        <div class="cup-spin">
+          <svg class="cup" viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <clipPath id="cupClip"><path d="M44 62 H144 V112 Q144 156 94 156 Q44 156 44 112 Z"/></clipPath>
+              <linearGradient id="coffeeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#a8703c"/><stop offset="1" stop-color="#4a2b14"/>
+              </linearGradient>
+            </defs>
+            <ellipse class="saucer" cx="94" cy="170" rx="76" ry="9"/>
+            <path class="cup-glass" d="M44 62 H144 V112 Q144 156 94 156 Q44 156 44 112 Z"/>
+            <g clip-path="url(#cupClip)"><rect class="coffee" x="40" y="70" width="108" height="92" fill="url(#coffeeGrad)"/></g>
+            <path class="cup-handle" d="M144 76 H156 Q178 76 178 102 Q178 126 150 126"/>
+            <path class="cup-body" d="M44 62 H144 V112 Q144 156 94 156 Q44 156 44 112 Z"/>
+            <ellipse class="rim" cx="94" cy="62" rx="50" ry="6"/>
+          </svg>
+        </div>
+      </div>
+      <h1 class="splash-title"><span>Kaué Coffee</span></h1>
+      <p class="splash-sub">Café mexicano de especialidad</p>
+    </div>
+    <button id="splashSkip" class="splash-skip" type="button">Saltar</button>
+  </div>
+  <script>if (sessionStorage.getItem('kaue_splash')) document.getElementById('splash').remove();</script>
+
   <header class="navbar">
     <a href="#inicio" class="logo"><i class="fa-solid fa-mug-hot"></i><span>Kaué Coffee</span></a>
     <nav id="mainNav">
       <a href="#inicio" data-nav="inicio">Inicio</a>
       <a href="#menu" data-nav="menu">Menú</a>
       <a href="#nosotros" data-nav="nosotros">Nosotros</a>
+      <a href="#pedidos" data-nav="pedidos" id="navPedidos" class="hidden">Pedidos</a>
     </nav>
     <div class="user-actions">
       <span id="userGreeting" class="user-greeting hidden"></span>
@@ -41,12 +71,12 @@
       </div>
       <div class="hero-badge">
         <strong>100%</strong>
-        <span>café<br>arábica</span>
+        <span>café<br>mexicano</span>
       </div>
     </section>
 
     <section class="features">
-      <div class="feature"><i class="fa-solid fa-seedling"></i><h3>Café de origen</h3><p>Granos 100% arábica, tostados en pequeños lotes.</p></div>
+      <div class="feature"><i class="fa-solid fa-seedling"></i><h3>Café mexicano</h3><p>Café mexicano de especialidad, tostado en pequeños lotes.</p></div>
       <div class="feature"><i class="fa-solid fa-bread-slice"></i><h3>Horneado cada día</h3><p>Croissants, muffins y brownies que salen del horno por la mañana.</p></div>
       <div class="feature"><i class="fa-solid fa-bell-concierge"></i><h3>Pide y recoge</h3><p>Arma tu pedido en línea y sigue el tiempo de preparación en vivo.</p></div>
     </section>
@@ -55,10 +85,10 @@
       <div class="story-text">
         <h2>Nuestra historia</h2>
         <p>Kaué Coffee nació de una idea sencilla: tomar un buen café no debería ser una prisa más del día. Quisimos crear un lugar en el Centro Histórico donde el aroma del café recién molido, una conversación tranquila y un buen bocado se encuentren en la misma mesa.</p>
-        <p>Desde el primer día elegimos trabajar con granos de especialidad, cuidar cada receta y hornear en casa. Para nosotros el café es un oficio: se aprende, se practica y se comparte con quien nos visita.</p>
+        <p>Desde el primer día elegimos trabajar con café mexicano de especialidad, cuidar cada receta y hornear en casa. Para nosotros el café es un oficio: se aprende, se practica y se comparte con quien nos visita.</p>
         <p>Hoy Kaué es el punto de encuentro de quienes pasan por un espresso antes del trabajo, de quienes estudian con una laptop y un latte, y de quienes se regalan una tarde de postre y plática. Y para que nadie pierda tiempo en la fila, puedes hacer tu pedido en línea y recogerlo en barra.</p>
       </div>
-      <div class="story-photo"><img src="https://loremflickr.com/800/900/coffeeshop?lock=7" alt="Interior de una cafetería" loading="lazy" onerror="this.parentNode.classList.add('no-photo'); this.remove()"></div>
+      <div class="story-photo"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&h=900&q=80" alt="Interior de una cafetería" loading="lazy" onerror="this.parentNode.classList.add('no-photo'); this.remove()"></div>
     </section>
 
     <section class="home-section">
@@ -129,6 +159,23 @@
     <div class="products-grid" id="productsGrid"></div>
   </section>
 
+  <!-- ========== VISTA: PEDIDOS (solo empleados) ========== -->
+  <section id="pedidosView" class="menu-section pedidos-section hidden">
+    <h2>Pedidos de clientes</h2>
+    <p class="section-subtitle">Panel de empleados: revisa los pedidos y actualiza su estado.</p>
+    <div class="pedidos-bar">
+      <select id="pedidosFiltro" aria-label="Filtrar por estado">
+        <option value="todos">Todos</option>
+        <option value="pendiente">Pendientes</option>
+        <option value="preparando">En preparación</option>
+        <option value="listo">Listos</option>
+        <option value="entregado">Entregados</option>
+      </select>
+      <button id="pedidosRefresh" class="btn-primary" type="button"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+    </div>
+    <div id="pedidosList" class="pedidos-list"></div>
+  </section>
+
   <footer class="footer">
     <span><i class="fa-solid fa-mug-hot"></i> Kaué Coffee</span>
     <span>Café de especialidad &amp; repostería</span>
@@ -149,6 +196,7 @@
         <button id="tabLogin" class="tab-btn active">Iniciar sesión</button>
         <button id="tabRegister" class="tab-btn">Crear cuenta</button>
       </div>
+      <p id="authMsg" class="auth-msg hidden"></p>
       <form id="loginForm" class="auth-form">
         <h3>Bienvenido de nuevo</h3>
         <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
@@ -252,6 +300,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
